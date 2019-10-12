@@ -5,13 +5,17 @@
 
 d3.csv('./data/toulouse.csv').then(function (data) {
     console.log(data)
+
     const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
     'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
-    listOfDomains = new Array
+
+    listOfDomains = [];
+
     domains.forEach(element => {
-        let obj = {name:element, children:[]}
-        listOfDomains.push(obj)
+        let obj = {name:element, children:[]};
+        listOfDomains.push(obj);
     });
+
     data.forEach(row => {
         domains.forEach(column => {
             if(row[column] != ""){
@@ -22,7 +26,7 @@ d3.csv('./data/toulouse.csv').then(function (data) {
             }
         });
     });
-    console.log(listOfDomains);
+    chart(listOfDomains)
 });
 
 chart = function (data) {
