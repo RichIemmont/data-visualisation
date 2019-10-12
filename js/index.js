@@ -3,56 +3,23 @@
     chart(data);
 });*/
 
-d3.csv('/data/toulouse.csv').then(function (data) {
-    test(data);
-    //const dataSet = transform(data);
-    //chart(dataSet);
-});
-
-let getDomains = function (data) {
-    let domains = {};
-    if (data['ROBOTIQUE'] === 1) {
-        domains['ROBOTIQUE'] = 1
-    }
-};
-
-let removeNotInDomain = function(data) {
-
-};
-
-const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
+d3.csv('./data/toulouse.csv').then(function (data) {
+    console.log(data)
+    const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
     'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
-let test = function (data) {
-    console.log(data[0]['USAGE IA']);
-    let companiesByUsages = d3.nest()
-        .key(function (d) {
-            return d['USAGE IA'];
-        })
-        .entries(data);
-
-    console.log(companiesByUsages[0]['values']);
-
-    let companiesByDomains = d3.nest()
-        .key(function (d) {
-            return d['MACHINE LEARNING'];
-        })
-        .entries(companiesByUsages[0]['values']);
-
-    let dodo = [];
-    domains.forEach(function (domain) {
-       let companies = d3.nest()
-           .key(function (d) {
-               return d[domain]
-           })
-           .entries(data);
-
-       let object = [];
-        object[domain] = companies;
-       dodo.push(object);
+    listOfDomains = new Array
+    domains.forEach(element => {
+        let obj = {name:element, children:[]}
+        listOfDomains.push(obj)
     });
-
-    console.log(dodo[0][[Object.keys(dodo[0])[0]]]);
-};
+    data.forEach(row => {
+        domains.forEach(column => {
+            if(row[column] === 1){
+            }
+        });
+    });
+    console.log(listOfDomains);
+});
 
 chart = function (data) {
     console.log(data);
