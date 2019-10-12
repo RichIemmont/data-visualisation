@@ -3,9 +3,7 @@
     chart(data);
 });*/
 
-d3.csv('./data/toulouse.csv').then(function (data) {
-    console.log(data)
-
+d3.csv('./data/toulouse.csv').then(function (data) {    
     const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
     'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
 
@@ -17,6 +15,7 @@ d3.csv('./data/toulouse.csv').then(function (data) {
     });
 
     data.forEach(row => {
+        row.value = 3000;
         domains.forEach(column => {
             if(row[column] != ""){
                 var result = listOfDomains.filter(obj => {
@@ -26,7 +25,8 @@ d3.csv('./data/toulouse.csv').then(function (data) {
             }
         });
     });
-    chart(listOfDomains)
+    toulouseCompanies = {name:"Toulouse", children:listOfDomains};
+    chart(toulouseCompanies);
 });
 
 chart = function (data) {
