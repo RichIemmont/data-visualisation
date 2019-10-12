@@ -3,9 +3,10 @@
     chart(data);
 });*/
 
-d3.csv('/data/toulouse.csv', function (data) {
-    const dataSet = transform(data);
-    chart(dataSet);
+d3.csv('/data/toulouse.csv').then(function (data) {
+    test(data);
+    //const dataSet = transform(data);
+    //chart(dataSet);
 });
 
 let getDomains = function (data) {
@@ -15,35 +16,43 @@ let getDomains = function (data) {
     }
 };
 
-let transform = function (data) {
-    let transformData = {};
-    transformData.name = 'companies';
-    transformData.children  = [];
-    let usages = {};
+let removeNotInDomain = function(data) {
 
-    data.forEach(function (element) {
-        let usage = element['USAGE IA'];
-
-        if (usage in usages) {
-            usages[usage]['value'] += 1;
-        } else {
-            usages[usage] = {};
-            usages[usage]['value'] = 1;
-        }
-    });
-    transformData.children.push(usages);
-
-    /*
-        let main = d3.select('#company');
-        data.forEach(function (element) {
-            main.append("div")
-                .html(element.NOM);
-            main.append("p")
-                .html(element['USAGE IA']);
-        });*/
-    return transformData
 };
 
+const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
+    'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
+let test = function (data) {
+    console.log(data[0]['USAGE IA']);
+    let companiesByUsages = d3.nest()
+        .key(function (d) {
+            return d['USAGE IA'];
+        })
+        .entries(data);
+
+    console.log(companiesByUsages[0]['values']);
+
+    let companiesByDomains = d3.nest()
+        .key(function (d) {
+            return d['MACHINE LEARNING'];
+        })
+        .entries(companiesByUsages[0]['values']);
+
+    let dodo = [];
+    domains.forEach(function (domain) {
+       let companies = d3.nest()
+           .key(function (d) {
+               return d[domain]
+           })
+           .entries(data);
+
+       let object = [];
+        object[domain] = companies;
+       dodo.push(object);
+    });
+
+    console.log(dodo[0][[Object.keys(dodo[0])[0]]]);
+};
 
 chart = function (data) {
     console.log(data);
@@ -52,7 +61,7 @@ chart = function (data) {
         .padding(3)
         (d3.hierarchy(data)
             .sum(d => d.value)
-            .sort((a, b) => b.value - a.value))
+            .sort((a, b) => b.value - a.value));
 
     let height;
     let width = height = 932;
