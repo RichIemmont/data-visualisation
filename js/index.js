@@ -16,6 +16,7 @@ d3.csv('./data/toulouse.csv').then(function (data) {
 
     data.forEach(row => {
         row.value = 3000;
+        row.name = row.NOM;
         domains.forEach(column => {
             if(row[column] != ""){
                 var result = listOfDomains.filter(obj => {
