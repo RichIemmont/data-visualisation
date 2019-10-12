@@ -14,7 +14,11 @@ d3.csv('./data/toulouse.csv').then(function (data) {
     });
     data.forEach(row => {
         domains.forEach(column => {
-            if(row[column] === 1){
+            if(row[column] != ""){
+                var result = listOfDomains.filter(obj => {
+                    return obj.name === column
+                  });
+                result[0].children.push(row);    
             }
         });
     });
