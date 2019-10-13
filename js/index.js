@@ -48,6 +48,18 @@ chart = function (data) {
         .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
         .interpolate(d3.interpolateHcl);
 
+    let circleColor = function(depth) {
+      if(depth === 0) {
+          return 'root'
+      }
+
+      if(depth === 1) {
+          return 'children'
+      }
+
+      return 'baby'
+    };
+
     const root = pack(data);
     console.log(root);
     let focus = root;
@@ -66,6 +78,7 @@ chart = function (data) {
         .data(root.descendants().slice(1))
         .join("circle")
         .attr("fill", d => d.children ? color(d.depth) : "white")
+        .attr("class", d => circleColor(d.depth))
         .attr("pointer-events", d => !d.children ? "none" : null)
         .on("mouseover", function () {
             d3.select(this).attr("stroke", "#000");
