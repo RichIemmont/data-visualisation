@@ -3,30 +3,31 @@
     chart(data);
 });*/
 
-d3.csv('./data/toulouse.csv').then(function (data) {    
+d3.csv('./data/toulouse.csv').then(function (data) {
     const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
-    'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
+        'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
 
     let listOfDomains = [];
 
     domains.forEach(element => {
-        let obj = {name:element, children:[]};
+        let obj = { name: element, children: [] };
         listOfDomains.push(obj);
     });
 
     data.forEach(row => {
-        row.value = 3000;
+        //row.value = 3000;
         row.name = row.NOM;
+        row.children = [{ name: "ici descriptif", value: 3000 }]
         domains.forEach(column => {
-            if(row[column] !== ""){
+            if (row[column] !== "") {
                 let result = listOfDomains.filter(obj => {
                     return obj.name === column
-                  });
-                result[0].children.push(row);    
+                });
+                result[0].children.push(row);
             }
         });
     });
-    let toulouseCompanies = {name:"Toulouse", children:listOfDomains};
+    let toulouseCompanies = { name: "Toulouse", children: listOfDomains };
     chart(toulouseCompanies);
 });
 
@@ -83,7 +84,8 @@ chart = function (data) {
         .join("text")
         .style("fill-opacity", d => d.parent === root ? 1 : 0)
         .style("display", d => d.parent === root ? "inline" : "none")
-        .text(d => d.data.name);
+        .text(d => d.data.name)
+        .style("font-weight", "bold");
 
     zoomTo([root.x, root.y, root.r * 2]);
 
