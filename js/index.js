@@ -10,14 +10,14 @@ d3.csv('./data/toulouse.csv').then(function (data) {
     let listOfDomains = [];
 
     domains.forEach(element => {
-        let obj = { name: element, children: [] };
+        let obj = {name: element, children: []};
         listOfDomains.push(obj);
     });
 
     data.forEach(row => {
         //row.value = 3000;
         row.name = row.NOM;
-        row.children = [{ name: "ici descriptif", value: 3000 }]
+        row.children = [{name: "ici descriptif", value: 3000}]
         domains.forEach(column => {
             if (row[column] !== "") {
                 let result = listOfDomains.filter(obj => {
@@ -27,12 +27,11 @@ d3.csv('./data/toulouse.csv').then(function (data) {
             }
         });
     });
-    let toulouseCompanies = { name: "Toulouse", children: listOfDomains };
+    let toulouseCompanies = {name: "Toulouse", children: listOfDomains};
     chart(toulouseCompanies);
 });
 
 chart = function (data) {
-    console.log(data);
     let pack = data => d3.pack()
         .size([width, height])
         .padding(3)
@@ -48,20 +47,19 @@ chart = function (data) {
         .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
         .interpolate(d3.interpolateHcl);
 
-    let circleColor = function(depth) {
-      if(depth === 0) {
-          return 'root'
-      }
+    let circleColor = function (depth) {
+        if (depth === 0) {
+            return 'root'
+        }
 
-      if(depth === 1) {
-          return 'children'
-      }
+        if (depth === 1) {
+            return 'children'
+        }
 
-      return 'baby'
+        return 'baby'
     };
 
     const root = pack(data);
-    console.log(root);
     let focus = root;
     let view;
 
@@ -69,7 +67,7 @@ chart = function (data) {
         .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
         .style("display", "block")
         .style("margin", "0 -14px")
-        .style("background", color(0))
+        .style("background", color(5))
         .style("cursor", "pointer")
         .on("click", () => zoom(root));
 
