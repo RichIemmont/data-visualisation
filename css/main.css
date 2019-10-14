@@ -1,7 +1,63 @@
-circle.children {
-    fill: red;
+circle.children-1 {
+    fill: #CE1E35;
 }
 
-circle.baby {
-    fill: green;
+circle.baby-1, circle.mini-1 {
+    fill: #E33710;
+}
+
+circle.children-2 {
+    fill: #79EABA;
+}
+circle.baby-2, circle.mini-2 {
+    fill: #AFE179;
+}
+
+circle.children-3 {
+    fill: #95D1BB;
+}
+circle.baby-3, circle.mini-3 {
+    fill: #44AFE5;
+}
+
+circle.children-4 {
+    fill: #E1D7D9;
+}
+circle.baby-4, circle.mini-4 {
+    fill: #FFC4BB;
+}
+
+circle.children-5 {
+    fill: #D2C726;
+}
+circle.baby-5, circle.mini-5 {
+    fill: #55D908;
+}
+
+circle.children-6 {
+    fill: #74A66D;
+}
+circle.baby-6, circle.mini-6 {
+    fill: #006D6E;
+}
+
+circle.children-7 {
+    fill: #B78C59;
+}
+circle.baby-7, circle.mini-7 {
+    fill: #8B5800
+}
+
+circle.children-8 {
+    fill: #FFFF5D
+}
+circle.baby-8, circle.mini-8 {
+    fill: #FFA15E
+}
+
+circle.children-9 {
+    fill: #006E7A
+}
+circle.baby-9, circle.mini-9 {
+    fill: #00D79F
 }

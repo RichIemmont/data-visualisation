@@ -2,11 +2,10 @@
 /*data = d3.json("https://raw.githubusercontent.com/d3/d3-hierarchy/v1.1.8/test/data/flare.json", function (data) {
     chart(data);
 });*/
+const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
+    'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
 
 d3.csv('./data/toulouse.csv').then(function (data) {
-    const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
-        'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
-
     let listOfDomains = [];
 
     domains.forEach(element => {
@@ -17,7 +16,7 @@ d3.csv('./data/toulouse.csv').then(function (data) {
     data.forEach(row => {
         //row.value = 3000;
         row.name = row.NOM;
-        row.children = [{name: "ici descriptif", value: 3000}]
+        row.children = [{name: row.name, value: row.Num, info: row}];
         domains.forEach(column => {
             if (row[column] !== "") {
                 let result = listOfDomains.filter(obj => {
@@ -34,29 +33,36 @@ d3.csv('./data/toulouse.csv').then(function (data) {
 chart = function (data) {
     let pack = data => d3.pack()
         .size([width, height])
-        .padding(3)
+        .padding(1)
         (d3.hierarchy(data)
             .sum(d => d.value)
             .sort((a, b) => b.value - a.value));
 
     let height;
-    let width = height = 932;
+    let width = height = 900;
     let format = d3.format(",d");
     let color = d3.scaleLinear()
         .domain([0, 5])
         .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
         .interpolate(d3.interpolateHcl);
 
-    let circleColor = function (depth) {
-        if (depth === 0) {
+    let circleColor = function (d) {
+        if (d.depth === 0) {
             return 'root'
         }
 
-        if (depth === 1) {
-            return 'children'
+        if (d.depth === 1) {
+            let cssId = domains.indexOf(d.data.name);
+            return 'children-' + (cssId + 1);
         }
 
-        return 'baby'
+        if (d.depth === 2) {
+            let cssId = domains.indexOf(d.parent.data.name);
+            return 'baby-' + (cssId + 1);
+        }
+
+        let cssId = domains.indexOf(d.parent.parent.data.name);
+        return 'mini-' + (cssId + 1);
     };
 
     const root = pack(data);
@@ -66,8 +72,8 @@ chart = function (data) {
     const svg = d3.select("body").append("svg")
         .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
         .style("display", "block")
-        .style("margin", "0 -14px")
-        .style("background", color(5))
+        .style("border", "black solid 1px")
+        .style("background", "#FFF")
         .style("cursor", "pointer")
         .on("click", () => zoom(root));
 
@@ -76,10 +82,11 @@ chart = function (data) {
         .data(root.descendants().slice(1))
         .join("circle")
         .attr("fill", d => d.children ? color(d.depth) : "white")
-        .attr("class", d => circleColor(d.depth))
+        .attr("class", d => circleColor(d))
         .attr("pointer-events", d => !d.children ? "none" : null)
+        .attr("stroke-width", "1px")
         .on("mouseover", function () {
-            d3.select(this).attr("stroke", "#000");
+            d3.select(this).attr("stroke", "black");
         })
         .on("mouseout", function () {
             d3.select(this).attr("stroke", null);
@@ -96,13 +103,13 @@ chart = function (data) {
         .style("fill-opacity", d => d.parent === root ? 1 : 0)
         .style("display", d => d.parent === root ? "inline" : "none")
         .text(d => d.data.name)
-        .style("font-weight", "bold");
+        .style("font-weight", "lighter");
 
     zoomTo([root.x, root.y, root.r * 2]);
 
     function zoomTo(v) {
         const k = width / v[2];
-
+        console.log(v);
         view = v;
 
         label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
