@@ -1,3 +1,36 @@
+body, svg {
+    font-family: 'Lato', sans-serif;
+}
+
+body {
+    background: #2C2633;
+    color: #FFF;
+    opacity: 0.87;
+}
+
+header {
+    text-align: center;
+}
+
+svg {
+    background-color: #1F1B24;
+    border-radius: 200px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+svg:hover {
+    box-shadow: 0 5px 5px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22);
+}
+
+text {
+    color: #1F1B24;
+}
+
+circle:hover {
+    filter: drop-shadow(0 0 0.2rem #BFBFBF);
+}
+
 circle.children-1 {
     fill: #CE1E35;
 }
