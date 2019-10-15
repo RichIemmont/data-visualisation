@@ -72,8 +72,6 @@ chart = function (data) {
     const svg = d3.select("body").append("svg")
         .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
         .style("display", "block")
-        .style("border", "black solid 1px")
-        .style("background", "#FFF")
         .style("cursor", "pointer")
         .on("click", () => zoom(root));
 
@@ -85,16 +83,16 @@ chart = function (data) {
         .attr("class", d => circleColor(d))
         .attr("pointer-events", d => !d.children ? "none" : null)
         .attr("stroke-width", "1px")
-        .on("mouseover", function () {
-            d3.select(this).attr("stroke", "black");
+/*        .on("mouseover", function () {
+            d3.select(this).attr("stroke", "#FFF");
         })
         .on("mouseout", function () {
             d3.select(this).attr("stroke", null);
-        })
+        })*/
         .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
     const label = svg.append("g")
-        .style("font", "10px sans-serif")
+        .style("font-size", "10px")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
         .selectAll("text")
@@ -109,7 +107,6 @@ chart = function (data) {
 
     function zoomTo(v) {
         const k = width / v[2];
-        console.log(v);
         view = v;
 
         label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
