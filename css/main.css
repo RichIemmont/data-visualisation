@@ -26,6 +26,15 @@ svg:hover {
 text {
     color: #1F1B24;
 }
+
+a text{
+    color: #FFF;
+}
+
+a:hover {
+    filter: drop-shadow(0 0 0.2rem #BFBFBF);
+}
+
 circle:hover {
     filter: drop-shadow(0 0 0.2rem #BFBFBF);
 }
