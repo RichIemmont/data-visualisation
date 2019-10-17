@@ -5,11 +5,13 @@
 const domains = ['ROBOTIQUE', 'VISION PAR ORDINATEUR', 'MACHINE LEARNING', 'DEEP LEARNING', 'SYSTEME DE RECOMMANDATION',
     'TRAITEMENT NATUREL DU LANGAGE', 'ETHIQUE', 'SYSTEME EXPERT', 'AUTRE'];
 
+var focus;
+
 d3.csv('./data/toulouse.csv').then(function (data) {
     let listOfDomains = [];
 
     domains.forEach(element => {
-        let obj = {name: element, children: []};
+        let obj = { name: element, children: [] };
         listOfDomains.push(obj);
     });
 
@@ -25,8 +27,22 @@ d3.csv('./data/toulouse.csv').then(function (data) {
             }
         });
     });
-    let toulouseCompanies = {name: "Toulouse", children: listOfDomains};
+    let toulouseCompanies = { name: "Toulouse", children: listOfDomains };
     chart(toulouseCompanies);
+
+    /*let lostOfBabyCircle = new Array;
+    for (let index = 0; index < 9; index++) {
+        lostOfBabyCircle.push(document.getElementsByClassName("baby-" + (index + 1)))
+    }
+    lostOfBabyCircle.forEach(item => {
+        for (let index = 0; index < item.length; index++) {
+            if (focus.parent === null)
+                item[index].setAttribute("pointer-events", "none")
+            else
+                item[index].setAttribute("pointer-events", null)
+        }
+    });*/
+
 });
 
 chart = function (data) {
@@ -65,7 +81,7 @@ chart = function (data) {
     };
 
     const root = pack(data);
-    let focus = root;
+    focus = root;
     let view;
 
     const svg = d3.select("body").append("svg")
@@ -82,12 +98,12 @@ chart = function (data) {
         .attr("class", d => circleColor(d))
         .attr("pointer-events", d => null)
         .attr("stroke-width", "1px")
-/*        .on("mouseover", function () {
+        .on("mouseover", function () {
             d3.select(this).attr("stroke", "#FFF");
         })
         .on("mouseout", function () {
             d3.select(this).attr("stroke", null);
-        })*/
+        })
         .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
     const label = svg.append("g")
@@ -103,7 +119,7 @@ chart = function (data) {
         .style("font-weight", "lighter");
 
     zoomTo([root.x, root.y, root.r * 2]);
-
+    
     function zoomTo(v) {
         const k = height / v[2];
         view = v;
