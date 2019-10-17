@@ -17,7 +17,7 @@ d3.csv('./data/toulouse.csv').then(function (data) {
 
     data.forEach(row => {
         row.name = row.NOM;
-        row.value = row.Num
+        row.value = row.Num;
         domains.forEach(column => {
             if (row[column] !== "") {
                 let result = listOfDomains.filter(obj => {
@@ -146,12 +146,14 @@ chart = function (data) {
                 return d.parent === focus || this.style.display === "inline";
             })
             .transition(transition)
-            .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+            .style("fill-opacity", d => (d.parent === focus) || (d === focus && d.depth === 2) ? 1 : 0)
             .on("start", function (d) {
+                if(d.depth === 2 && d === focus) this.style.display = "inline";
                 if (d.parent === focus) this.style.display = "inline";
             })
             .on("end", function (d) {
-                if (d.parent !== focus) this.style.display = "none";
+                if(d.depth === 2 && d === focus) this.style.display = "inline";
+                else if (d.parent !== focus) this.style.display = "none";
             });
     }
 
