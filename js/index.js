@@ -14,9 +14,8 @@ d3.csv('./data/toulouse.csv').then(function (data) {
     });
 
     data.forEach(row => {
-        //row.value = 3000;
         row.name = row.NOM;
-        row.children = [{name: row.name, value: row.Num, info: row}];
+        row.value = row.Num
         domains.forEach(column => {
             if (row[column] !== "") {
                 let result = listOfDomains.filter(obj => {
@@ -38,8 +37,8 @@ chart = function (data) {
             .sum(d => d.value)
             .sort((a, b) => b.value - a.value));
 
-    let height;
-    let width = height = 900;
+    let height = window.innerHeight;
+    let width = window.innerWidth;
     let format = d3.format(",d");
     let color = d3.scaleLinear()
         .domain([0, 5])
@@ -81,7 +80,7 @@ chart = function (data) {
         .join("circle")
         .attr("fill", d => d.children ? color(d.depth) : "white")
         .attr("class", d => circleColor(d))
-        .attr("pointer-events", d => !d.children ? "none" : null)
+        .attr("pointer-events", d => null)
         .attr("stroke-width", "1px")
 /*        .on("mouseover", function () {
             d3.select(this).attr("stroke", "#FFF");
@@ -106,7 +105,7 @@ chart = function (data) {
     zoomTo([root.x, root.y, root.r * 2]);
 
     function zoomTo(v) {
-        const k = width / v[2];
+        const k = height / v[2];
         view = v;
 
         label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
