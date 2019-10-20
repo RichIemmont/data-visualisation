@@ -1,0 +1,104 @@
+body, svg {
+    font-family: 'Lato', sans-serif;
+}
+
+body {
+    background: #2C2633;
+    color: #FFF;
+    opacity: 0.87;
+}
+
+header {
+    text-align: center;
+}
+
+svg {
+    background-color: #1F1B24;
+    border-radius: 200px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+svg:hover {
+    box-shadow: 0 5px 5px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22);
+}
+
+text {
+    color: #1F1B24;
+}
+
+a text{
+    color: #FFF;
+}
+
+a:hover {
+    filter: drop-shadow(0 0 0.2rem #BFBFBF);
+}
+
+circle:hover {
+    filter: drop-shadow(0 0 0.2rem #BFBFBF);
+}
+
+circle.children-1 {
+    fill: #CE1E35;
+}
+
+circle.baby-1{
+    fill: #E33710;
+}
+
+circle.children-2 {
+    fill: #79EABA;
+}
+circle.baby-2{
+    fill: #AFE179;
+}
+
+circle.children-3 {
+    fill: #95D1BB;
+}
+circle.baby-3{
+    fill: #44AFE5;
+}
+
+circle.children-4 {
+    fill: #E1D7D9;
+}
+circle.baby-4{
+    fill: #FFC4BB;
+}
+
+circle.children-5 {
+    fill: #D2C726;
+}
+circle.baby-5{
+    fill: #55D908;
+}
+
+circle.children-6 {
+    fill: #74A66D;
+}
+circle.baby-6{
+    fill: #006D6E;
+}
+
+circle.children-7 {
+    fill: #B78C59;
+}
+circle.baby-7{
+    fill: #8B5800
+}
+
+circle.children-8 {
+    fill: #FFFF5D
+}
+circle.baby-8{
+    fill: #FFA15E
+}
+
+circle.children-9 {
+    fill: #006E7A
+}
+circle.baby-9{
+    fill: #00D79F
+}
