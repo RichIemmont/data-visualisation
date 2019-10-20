@@ -17,7 +17,7 @@ d3.csv('./data/toulouse.csv').then(function (data) {
 
     data.forEach(row => {
         row.name = row.NOM;
-        row.value = row.Num
+        row.value = row.Num;
         domains.forEach(column => {
             if (row[column] !== "") {
                 let result = listOfDomains.filter(obj => {
@@ -98,16 +98,10 @@ chart = function (data) {
         .attr("class", d => circleColor(d))
         .attr("pointer-events", d => null)
         .attr("stroke-width", "1px")
-        .on("mouseover", function () {
-            d3.select(this).attr("stroke", "#FFF");
-        })
-        .on("mouseout", function () {
-            d3.select(this).attr("stroke", null);
-        })
         .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
     const label = svg.append("g")
-        .style("font-size", "10px")
+        .style("font-size", "16px")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
         .selectAll("text")
@@ -118,20 +112,92 @@ chart = function (data) {
         .text(d => d.data.name)
         .style("font-weight", "lighter");
 
+    const tag = companyText('TAG');
+    const category = companyText('CATEGORIE');
+    const employee = companyText('Num', " employé(s)");
+
+    const link = svg.append("g")
+        .style("font-size", "12px")
+        .attr("pointer-events", "none")
+        .attr("text-anchor", "middle")
+        .selectAll("a")
+        .data(root.descendants().filter(obj => {
+            return obj.depth === 2
+        }))
+        .join("a")
+        .attr('href', d => d.data['Lien site web'])
+        .attr('target', '_blank')
+        .append('text')
+        .style("pointer-events", "auto")
+        .style("fill-opacity", d => d.parent === root ? 1 : 0)
+        .style("display", d => d.parent === root ? "inline" : "none")
+        .text('Plus d\'infos sur le site')
+        .style("font-weight", "lighter");
+
+    const image = svg.append("g")
+        .attr("pointer-events", "none")
+        .attr("text-anchor", "middle")
+        .selectAll("image")
+        .data(root.descendants().filter(obj => {
+            return obj.depth === 2
+        }))
+        .join("image")
+        .attr('href', d => 'img/' + d.data['Logos'])
+        .style('width', '80px')
+        .style('height', '80px')
+        .style("fill-opacity", d => d.parent === root ? 1 : 0)
+        .style("display", d => d.parent === root ? "inline" : "none");
+
     zoomTo([root.x, root.y, root.r * 2]);
-    
+
     function zoomTo(v) {
         const k = height / v[2];
         view = v;
 
-        label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+        label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k - 10})`);
+        tag.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k + 20})`);
+        category.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k + 40})`);
+        employee.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k + 60})`);
+        link.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k + 80})`);
+        image.attr("transform", d => `translate(${(d.x - v[0]) * k - 40},${(d.y - v[1]) * k - 125})`);
+
         node.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
         node.attr("r", d => d.r * k);
     }
 
-    function zoom(d) {
-        const focus0 = focus;
+    function filterText(contentText, transition) {
+        contentText.filter(function (d) {
+            return d === focus || this.style.display === "inline";
+        })
+            .transition(transition)
+            .style("fill-opacity", d => (d.parent === focus) || (d === focus && d.depth === 2) ? 1 : 0)
+            .on("start", function (d) {
+                if (d.depth === 2 && d === focus) this.style.display = "inline";
+                else this.style.display = "none";
+            })
+            .on("end", function (d) {
+                if (d.depth === 2 && d === focus) this.style.display = "inline";
+                else this.style.display = "none";
+            });
+    }
 
+    function companyText(columnName, additionalText = "") {
+        return svg.append("g")
+            .style("font-size", "15px")
+            .attr("pointer-events", "none")
+            .attr("text-anchor", "middle")
+            .selectAll("text")
+            .data(root.descendants().filter(obj => {
+                return obj.depth === 2
+            }))
+            .join("text")
+            .style("fill-opacity", d => d.parent === root ? 1 : 0)
+            .style("display", d => d.parent === root ? "inline" : "none")
+            .text(d => d.data[columnName] + additionalText)
+            .style("font-weight", "lighter");
+    }
+
+    function zoom(d) {
         focus = d;
 
         const transition = svg.transition()
@@ -146,13 +212,23 @@ chart = function (data) {
                 return d.parent === focus || this.style.display === "inline";
             })
             .transition(transition)
-            .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+            .style("fill-opacity", d => (d.parent === focus) || (d === focus && d.depth === 2) ? 1 : 0)
             .on("start", function (d) {
+                if (d.depth === 2 && d === focus) {
+                    this.style.display = "inline";
+                }
                 if (d.parent === focus) this.style.display = "inline";
             })
             .on("end", function (d) {
-                if (d.parent !== focus) this.style.display = "none";
+                if (d.depth === 2 && d === focus) this.style.display = "inline";
+                else if (d.parent !== focus) this.style.display = "none";
             });
+
+        filterText(tag, transition);
+        filterText(category, transition);
+        filterText(employee, transition);
+        filterText(link, transition);
+        filterText(image, transition);
     }
 
     return svg.node();
