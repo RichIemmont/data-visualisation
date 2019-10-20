@@ -29,20 +29,6 @@ d3.csv('./data/toulouse.csv').then(function (data) {
     });
     let toulouseCompanies = { name: "Toulouse", children: listOfDomains };
     chart(toulouseCompanies);
-
-    /*let lostOfBabyCircle = new Array;
-    for (let index = 0; index < 9; index++) {
-        lostOfBabyCircle.push(document.getElementsByClassName("baby-" + (index + 1)))
-    }
-    lostOfBabyCircle.forEach(item => {
-        for (let index = 0; index < item.length; index++) {
-            if (focus.parent === null)
-                item[index].setAttribute("pointer-events", "none")
-            else
-                item[index].setAttribute("pointer-events", null)
-        }
-    });*/
-
 });
 
 chart = function (data) {
@@ -96,7 +82,7 @@ chart = function (data) {
         .join("circle")
         .attr("fill", d => d.children ? color(d.depth) : "white")
         .attr("class", d => circleColor(d))
-        .attr("pointer-events", d => null)
+        .attr("pointer-events", d => d.depth !== 2 ? 1 : 0)
         .attr("stroke-width", "1px")
         .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
@@ -205,6 +191,18 @@ chart = function (data) {
             .tween("zoom", d => {
                 const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
                 return t => zoomTo(i(t));
+            });
+
+        node
+            .transition(transition)
+            .on("start", function (d) {
+
+                if (d.parent === focus || d.depth !== 2) this.style.pointerEvents = 'auto';
+                else this.style.pointerEvents = 'none';
+            })
+            .on("end", function (d) {
+                if (d.parent === focus || d.depth !== 2) this.style.pointerEvents = 'auto';
+                else this.style.pointerEvents = 'none';
             });
 
         label
